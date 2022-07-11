@@ -6,7 +6,6 @@ from home_message.models import MessageSend
 from home_message.utilis import send_whatsapp_message
 
 
-
 @receiver(post_save, sender=MessageSend)
 def create_user_profile(sender, instance, created, *args, **kwargs):
     if created:
