@@ -6,9 +6,25 @@ from home_message.models import MessageSend
 from home_message.serializer import SendMessageSerializer
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import permissions
+from home_message.utilis import send_whatsapp_message
 
 
 # Create your views here.
+@api_view(['POST', ])
+def taskWhatsappCreate(request):
+    if request.method == 'POST':
+        serializer = SendMessageSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            messageSend = serializer.save()
+            data['response'] = "Message sent successfully"
+            data['title'] = messageSend.title
+            data['message'] = messageSend.title
+            return Response(data, status=status.HTTP_201_CREATED)
+        else:
+            data = serializer.errors
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
 
 # send message ================== api
 class MessageListAPIView(ListCreateAPIView):
@@ -16,11 +32,19 @@ class MessageListAPIView(ListCreateAPIView):
     queryset = MessageSend.objects.all()
 
     def perform_create(self, serializer):
-        return serializer.save()
+        data = {}
+        messGo = serializer.save()
+        data['success'] = "successfully sent"
+        data['title'] = messGo.title
+        data['message'] = messGo.message
+        message_title = messGo.title
+        message_body = messGo.message
+        message = f'{message_title} \n----------------- \n {message_body}'
+        send_whatsapp_message(message)
+        return Response(data=data, status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
         return self.queryset.filter()
-
 
 
 @api_view(['GET', ])
@@ -74,6 +98,3 @@ def createMessage_view(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-

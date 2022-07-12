@@ -12,4 +12,5 @@ def create_user_profile(sender, instance, created, *args, **kwargs):
         message_title = instance.title
         message_body = instance.message
         message = f'{message_title} \n----------------- \n {message_body}'
-        send_whatsapp_message(message)
+        # print(message)
+        # send_whatsapp_message(message)
