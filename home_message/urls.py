@@ -5,7 +5,7 @@ app_name = 'home_message'
 
 urlpatterns = [
     path('create-new', MessageListAPIView.as_view(), name='create-new'),
-    path('whatsap-send', taskWhatsappCreate, name="whatsapp_create")
+    # path('whatsap-send', taskWhatsappCreate, name="whatsapp_create")
 
 
 ]
