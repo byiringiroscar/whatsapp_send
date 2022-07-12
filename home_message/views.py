@@ -40,7 +40,7 @@ class MessageListAPIView(ListCreateAPIView):
         message_title = messGo.title
         message_body = messGo.message
         message = f'{message_title} \n----------------- \n {message_body}'
-        # send_whatsapp_message(message)
+        send_whatsapp_message(message)
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
