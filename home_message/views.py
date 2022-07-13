@@ -1,3 +1,5 @@
+import threading
+
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
@@ -7,9 +9,21 @@ from home_message.serializer import SendMessageSerializer
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import permissions
 from home_message.utilis import send_whatsapp_message
+import threading
 
 
 # Create your views here.
+# class WhatsappThread(threading.Thread):
+#     def __init__(self, whatsapp):
+#         self.whatsapp = whatsapp
+#         threading.Thread.__init__(self)
+#
+#     def run(self):
+#         self.whatsapp.send(fail_silently=False)
+
+
+
+
 @api_view(['POST', ])
 def taskWhatsappCreate(request):
     if request.method == 'POST':
@@ -24,6 +38,26 @@ def taskWhatsappCreate(request):
         else:
             data = serializer.errors
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST', ])
+def sendMessageGroup(request):
+    if request.method == "POST":
+        data = {}
+        all_data = MessageSend.objects.all()
+        for dt in all_data:
+            if not dt.sent:
+                dt.sent = True
+                dt.save()
+                message_title = dt.title
+                message_body = dt.message
+                message = f'{message_title} \n----------------- \n {message_body}'
+                send_whatsapp_message(message)
+                print("done =================")
+            else:
+                data['failure'] = ["no data to be sent"]
+        data["success"] = "successfully"
+        return Response(data, status=status.HTTP_200_OK)
 
 
 # send message ================== api
