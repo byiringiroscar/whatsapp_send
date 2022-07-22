@@ -1,4 +1,4 @@
-from home_message.views import getMessage_view, createMessage_view, updateMessage_view, deleteMessage_view, MessageListAPIView, sendMessageGroup,  taskWhatsappCreate
+from home_message.views import MessageListAPIView, sendMessageGroup,  taskWhatsappCreate
 from django.urls import path
 
 app_name = 'home_message'
